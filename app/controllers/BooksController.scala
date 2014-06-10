@@ -1,7 +1,7 @@
 package controllers
 
 import play.api.mvc.{AnyContent, BodyParsers, Action, Controller}
-import models.{BookSerializer, Book}
+import models.{Book, BookSerializer}
 import play.api.libs.json._
 
 object BooksController extends Controller with BookSerializer {

@@ -5,7 +5,7 @@ import play.api.libs.functional.syntax._
 
 case class BookReduced(id: Int, title: String, link: String)
 
-case class Book(id: Int, image: String, title: String, author: String, price: Double, link: String)
+case class Book(var id: Int, var image: String, var title: String, var author: String, var price: Double, var link: String)
 
 object Book {
 
@@ -14,11 +14,11 @@ object Book {
   }.toMap
 
   def list: List[Book] = {
-    booksMap.values.toList
+    booksMap.values.toList.sortWith(_.title < _.title)
   }
 
   def listReduced: List[BookReduced] = {
-    list.sortWith(_.title < _.title).map { book =>
+    list.map { book =>
       BookReduced(book.id, book.title, book.link)
     }
   }
@@ -28,9 +28,7 @@ object Book {
   }
 
   def delete(id: Int) {
-    println(booksMap.size)
     booksMap -= id
-    println(booksMap.size)
   }
 
   def get(id: Int): Book = {
@@ -49,20 +47,20 @@ trait BookSerializer {
 
   implicit val bookWrites: Writes[Book] = (
     (JsPath \ "id").write[Int] and
-      (JsPath \ "image").write[String] and
-      (JsPath \ "title").write[String] and
-      (JsPath \ "author").write[String] and
-      (JsPath \ "price").write[Double] and
-      (JsPath \ "link").write[String]
-    )(unlift(Book.unapply))
+    (JsPath \ "image").write[String] and
+    (JsPath \ "title").write[String] and
+    (JsPath \ "author").write[String] and
+    (JsPath \ "price").write[Double] and
+    (JsPath \ "link").write[String]
+  )(unlift(Book.unapply))
 
   implicit val bookReads: Reads[Book] = (
     (JsPath \ "id").read[Int] and
-      (JsPath \ "image").read[String] and
-      (JsPath \ "title").read[String] and
-      (JsPath \ "author").read[String] and
-      (JsPath \ "price").read[Double] and
-      (JsPath \ "link").read[String]
-    )(Book.apply _)
+    (JsPath \ "image").read[String] and
+    (JsPath \ "title").read[String] and
+    (JsPath \ "author").read[String] and
+    (JsPath \ "price").read[Double] and
+    (JsPath \ "link").read[String]
+  )(Book.apply _)
 
 }

@@ -32,6 +32,7 @@ angular.module('booksModule', ['ngTable'])
             $scope.originalBook = angular.copy($scope.book);
         };
         $scope.saveBook = function() {
+            $scope.book.link = '/api/v1/books/' + $scope.book.id;
             $http.put('/api/v1/books', $scope.book).then(function() {
                 $scope.listBooks();
                 $scope.newBook();
@@ -44,7 +45,6 @@ angular.module('booksModule', ['ngTable'])
             $http.delete('/api/v1/books/' + $scope.book.id).then(function() {
                 $scope.listBooks();
                 $scope.newBook();
-//                $scope.tableParams.reload();
             });
         };
         $scope.cssClass = function(ngModelController) {
