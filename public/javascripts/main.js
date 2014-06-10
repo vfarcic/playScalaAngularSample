@@ -1,8 +1,30 @@
-angular.module('booksModule', [])
-    .controller('booksCtrl', function ($scope, $http) {
+angular.module('booksModule', ['ngTable'])
+    .controller('booksCtrl', function ($scope, $http, ngTableParams) {
         $scope.listBooks = function() {
-            $http.get('/api/v1/items').then(function(response) {
+            if ($scope.tableParams !== undefined) {
+                $scope.tableParams.count($scope.tableParams.count() - 1);
+            }
+            $http.get('/api/v1/books').then(function(response) {
                 $scope.books = response.data;
+                $scope.setTableParams();
+            });
+        };
+        $scope['setTableParams'] = function() {
+            $scope.tableParams = new ngTableParams({
+                page: 1,
+                count: 10
+            }, {
+                counts: [], // hide page counts control
+                total: $scope.books.length,
+                getData: function($defer, params) {
+                    $defer.resolve($scope.books.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+                }
+            });
+        };
+        $scope.openBook = function(bookId) {
+            $http.get('/api/v1/books/' + bookId).then(function(response) {
+                $scope.book = response.data;
+                $scope.originalBook = angular.copy($scope.book);
             });
         };
         $scope.newBook = function() {
@@ -10,24 +32,19 @@ angular.module('booksModule', [])
             $scope.originalBook = angular.copy($scope.book);
         };
         $scope.saveBook = function() {
-            $http.put('/api/v1/items', $scope.book).then(function() {
+            $http.put('/api/v1/books', $scope.book).then(function() {
                 $scope.listBooks();
                 $scope.newBook();
-            });
-        };
-        $scope.openBook = function(bookId) {
-            $http.get('/api/v1/items/' + bookId).then(function(response) {
-                $scope.book = response.data;
-                $scope.originalBook = angular.copy($scope.book);
             });
         };
         $scope.revertBook = function() {
             $scope.book = angular.copy($scope.originalBook);
         };
         $scope.deleteBook = function() {
-            $http.delete('/api/v1/items/' + $scope.book.id).then(function() {
+            $http.delete('/api/v1/books/' + $scope.book.id).then(function() {
                 $scope.listBooks();
                 $scope.newBook();
+//                $scope.tableParams.reload();
             });
         };
         $scope.cssClass = function(ngModelController) {
@@ -52,7 +69,7 @@ angular.module('booksModule', [])
             return (typeof $scope.book !== 'undefined' && typeof $scope.book.id !== 'undefined');
         };
         $scope.pricePattern = function() {
-            return (/^[\d]+\.\d\d$/);
+            return (/^[\d]+\.*(\d)*$/);
         };
         $scope.listBooks();
         $scope.newBook();

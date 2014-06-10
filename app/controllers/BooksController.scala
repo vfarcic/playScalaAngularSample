@@ -11,7 +11,16 @@ object BooksController extends Controller with BookSerializer {
   }
 
   def listAll = Action {
-    Ok(Json.toJson(Book.list))
+    Ok(Json.toJson(Book.listReduced))
+  }
+
+  def get(id: Int) = Action {
+    Ok(Json.toJson(Book.get(id)))
+  }
+
+  def delete(id: Int) = Action {
+    Book.delete(id)
+    Ok(Json.obj("status" -> "OK", "message" -> s"Book $id has been removed"))
   }
 
   def save = Action(BodyParsers.parse.json) { request =>

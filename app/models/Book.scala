@@ -3,23 +3,49 @@ package models
 import play.api.libs.json.{Reads, JsPath, Writes}
 import play.api.libs.functional.syntax._
 
+case class BookReduced(id: Int, title: String, link: String)
+
 case class Book(id: Int, image: String, title: String, author: String, price: Double, link: String)
 
 object Book {
 
-  var list: List[Book] = {
-    1.until(99).map { n =>
-      Book(n, s"image$n", s"title$n", s"author$n", n, s"link$n")
-    }.toList
+  var booksMap: scala.collection.mutable.Map[Int, Book] = collection.mutable.Map() ++ 10.to(99).map { n =>
+    n -> Book(n, s"image$n", s"title$n", s"author$n", n.toDouble, s"/api/v1/books/$n")
+  }.toMap
+
+  def list: List[Book] = {
+    booksMap.values.toList
+  }
+
+  def listReduced: List[BookReduced] = {
+    list.sortWith(_.title < _.title).map { book =>
+      BookReduced(book.id, book.title, book.link)
+    }
   }
 
   def save(book: Book) = {
-    list = list ::: List(book)
+    booksMap += (book.id -> book)
+  }
+
+  def delete(id: Int) {
+    println(booksMap.size)
+    booksMap -= id
+    println(booksMap.size)
+  }
+
+  def get(id: Int): Book = {
+    booksMap(id)
   }
 
 }
 
 trait BookSerializer {
+
+  implicit val bookReducedWrites: Writes[BookReduced] = (
+    (JsPath \ "id").write[Int] and
+    (JsPath \ "title").write[String] and
+    (JsPath \ "link").write[String]
+  )(unlift(BookReduced.unapply))
 
   implicit val bookWrites: Writes[Book] = (
     (JsPath \ "id").write[Int] and
