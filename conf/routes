@@ -3,9 +3,10 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index
+GET     /                           controllers.BooksController.index
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
-GET    /api/v1/books/all            controllers.BooksController.listAll
+GET    /api/v1/books                controllers.BooksController.listAll
+POST   /api/v1/books                controllers.BooksController.save
