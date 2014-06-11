@@ -5,7 +5,7 @@ import play.api.libs.functional.syntax._
 
 case class BookReduced(id: Int, title: String, link: String)
 
-case class Book(var id: Int, var image: String, var title: String, var author: String, var price: Double, var link: String)
+case class Book(id: Int, image: String, title: String, author: String, price: Double, link: String)
 
 object Book {
 
@@ -17,7 +17,7 @@ object Book {
     booksMap.values.toList.sortWith(_.title < _.title)
   }
 
-  def listReduced: List[BookReduced] = {
+  def listReduced: List[BookRedremove the specified bookuced] = {
     list.map { book =>
       BookReduced(book.id, book.title, book.link)
     }

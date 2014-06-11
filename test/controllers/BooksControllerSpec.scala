@@ -93,6 +93,7 @@ class BooksControllerSpec extends Specification with BeforeExample with JsonMatc
     "remove the specified book" in {
       running(FakeApplication()) {
         route(FakeRequest(DELETE, url))
+        status(result) must equalTo(OK)
         Book.list must not contain book1
       }
     }
