@@ -92,7 +92,7 @@ class BooksControllerSpec extends Specification with BeforeExample with JsonMatc
 
     "remove the specified book" in {
       running(FakeApplication()) {
-        route(FakeRequest(DELETE, url))
+        val Some(result) = route(FakeRequest(DELETE, url))
         status(result) must equalTo(OK)
         Book.list must not contain book1
       }
@@ -120,11 +120,11 @@ class BooksControllerSpec extends Specification with BeforeExample with JsonMatc
 
     "update the specified book" in {
       running(FakeApplication()) {
-        book1.title = "This is updated title"
+        val updatedBook = book1.copy(title = "This is updated title")
         val count = Book.list.size
-        val Some(result) = route(FakeRequest(PUT, url, fakeJsonHeaders, Json.toJson(book1)))
+        val Some(result) = route(FakeRequest(PUT, url, fakeJsonHeaders, Json.toJson(updatedBook)))
         status(result) must equalTo(OK)
-        Book.list must contain(book1)
+        Book.list must contain(updatedBook)
         Book.list must have size count
       }
     }

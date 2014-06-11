@@ -17,7 +17,7 @@ object Book {
     booksMap.values.toList.sortWith(_.title < _.title)
   }
 
-  def listReduced: List[BookRedremove the specified bookuced] = {
+  def listReduced: List[BookReduced] = {
     list.map { book =>
       BookReduced(book.id, book.title, book.link)
     }
