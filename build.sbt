@@ -1,4 +1,4 @@
-name := """play-scala"""
+name := """play-scala-angularjs-sample"""
 
 version := "1.0-SNAPSHOT"
 
