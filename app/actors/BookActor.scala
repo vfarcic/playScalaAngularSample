@@ -15,8 +15,7 @@ class BookActor extends Actor {
   def receive = {
     case ListBooks          => sender ! Books(Book.list)
     case ListBooksReduced   =>
-      // Simulate a long running process
-      Thread.sleep(1000)
+//      Thread.sleep(5000)
       sender ! BooksReduced(Book.listReduced)
     case SaveBook(book)     =>
       Book.save(book)
