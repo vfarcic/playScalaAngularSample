@@ -156,11 +156,26 @@ describe('storiesModule controllers', function() {
         });
 
         describe('isValid method', function() {
-           it('should return false if ngModelController is invalid', function() {
-               element.$invalid = true;
-               element.$valid = false;
-               expect(scope.isValid(element)).toEqual(false);
-           });
+            beforeEach(
+                function() {
+                    element.$invalid = false;
+                    element.$valid = true;
+                    scope.book = book1;
+                    scope.originalBook = {};
+                }
+            );
+            it('should return false when ngModelController is invalid', function() {
+                element.$invalid = true;
+                element.$valid = false;
+                expect(scope.isValid(element)).toEqual(false);
+            });
+            it('should return false when book is unchanged', function() {
+                scope.originalBook = book1;
+                expect(scope.isValid(element)).toEqual(false)
+            });
+            it('should return true when ngModelController is valid and book is changed', function() {
+                expect(scope.isValid(element)).toEqual(true)
+            });
         });
 
         describe('canRevertBook method', function() {

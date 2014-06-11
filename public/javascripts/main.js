@@ -1,24 +1,9 @@
 angular.module('booksModule', ['ngTable'])
     .controller('booksCtrl', function ($scope, $http, ngTableParams) {
         $scope.listBooks = function() {
-            if ($scope.tableParams !== undefined) {
-                $scope.tableParams.count($scope.tableParams.count() - 1);
-            }
             $http.get('/api/v1/books').then(function(response) {
                 $scope.books = response.data;
                 $scope.setTableParams();
-            });
-        };
-        $scope['setTableParams'] = function() {
-            $scope.tableParams = new ngTableParams({
-                page: 1,
-                count: 10
-            }, {
-                counts: [], // hide page counts control
-                total: $scope.books.length,
-                getData: function($defer, params) {
-                    $defer.resolve($scope.books.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-                }
             });
         };
         $scope.openBook = function(bookId) {
@@ -60,7 +45,7 @@ angular.module('booksModule', ['ngTable'])
             };
         };
         $scope.isValid = function(ngModelController) {
-            return ngModelController.$valid;
+            return ngModelController.$valid && !angular.equals($scope.book, $scope.originalBook);
         };
         $scope.canRevertBook = function() {
             return !angular.equals($scope.book, $scope.originalBook);
@@ -70,6 +55,21 @@ angular.module('booksModule', ['ngTable'])
         };
         $scope.pricePattern = function() {
             return (/^[\d]+\.*(\d)*$/);
+        };
+        $scope.setTableParams = function() {
+            if ($scope.tableParams !== undefined) {
+                $scope.tableParams.count($scope.tableParams.count() - 1);
+            }
+            $scope.tableParams = new ngTableParams({
+                page: 1,
+                count: 10
+            }, {
+                counts: [], // hide page counts control
+                total: $scope.books.length,
+                getData: function($defer, params) {
+                    $defer.resolve($scope.books.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+                }
+            });
         };
         $scope.listBooks();
         $scope.newBook();
