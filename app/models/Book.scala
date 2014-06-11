@@ -18,9 +18,7 @@ object Book {
   }
 
   def listReduced: List[BookReduced] = {
-    list.map { book =>
-      BookReduced(book.id, book.title, book.link)
-    }
+    list.map(book => BookReduced(book.id, book.title, book.link))
   }
 
   def save(book: Book) = {
