@@ -4,9 +4,13 @@ import org.specs2.mutable.{After, Specification}
 import akka.testkit._
 import akka.actor._
 import models.{BookReduced, Book}
+import scala.concurrent.duration._
 
 abstract class AkkaTestkitSpecs2Support extends TestKit(ActorSystem()) with After with ImplicitSender {
-  def after = system.shutdown()
+  def after = {
+    system.shutdown()
+    system.awaitTermination(10.seconds)
+  }
 }
 
 class BookActorSpec extends Specification {

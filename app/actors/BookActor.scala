@@ -14,9 +14,7 @@ class BookActor extends Actor {
 
   def receive = {
     case ListBooks          => sender ! Books(Book.list)
-    case ListBooksReduced   =>
-//      Thread.sleep(5000)
-      sender ! BooksReduced(Book.listReduced)
+    case ListBooksReduced   => sender ! BooksReduced(Book.listReduced)
     case SaveBook(book)     =>
       Book.save(book)
       val title = book.title
