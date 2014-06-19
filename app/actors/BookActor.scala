@@ -17,8 +17,7 @@ class BookActor extends Actor {
     case ListBooksReduced   => sender ! BooksReduced(Book.listReduced)
     case SaveBook(book)     =>
       Book.save(book)
-      val title = book.title
-      sender ! Status("OK", s"Book $title has been saved.")
+      sender ! Status("OK", s"Book ${book.title} has been saved.")
   }
 
 }
