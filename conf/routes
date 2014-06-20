@@ -12,3 +12,5 @@ GET     /api/v1/books               controllers.BooksController.listAll
 GET     /api/v1/books/*id           controllers.BooksController.get(id: Int)
 DELETE  /api/v1/books/*id           controllers.BooksController.delete(id: Int)
 PUT     /api/v1/books               controllers.BooksController.save
+
+GET     /api/generic/*service       controllers.GenericController.get
